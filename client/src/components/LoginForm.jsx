@@ -38,11 +38,12 @@ const LoginForm = () => {
     }
 
     try {
+      console.log('Submitting form with data:', userFormData);
       const {data} = await login({
         variables: {...userFormData},
       });
 
-      console.log(data);
+      console.log('GraphQL response:', data);
       Auth.login(data.login.token);
 
     } catch (err) {
