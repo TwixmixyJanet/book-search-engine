@@ -17,16 +17,15 @@ const server = new ApolloServer({
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// Create a new instance of an Apollo server with the GraphQL schema
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../client/build')));
+
+  app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build'));
+  });
 }
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build'));
-});
-
-const startApolloServer = async () => {
+const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
   server.applyMiddleware({ app });
 
@@ -39,4 +38,4 @@ const startApolloServer = async () => {
 };
 
 // Call the async function to start the server
-  startApolloServer();
+  startApolloServer(typeDefs, resolvers);
