@@ -24,19 +24,23 @@ const resolvers = {
             return { token, user };
         },
         login: async (parent, { email, password }) => {
+            console.log('Login attempt with email:', email);
             const user = await User.findOne({ email });
 
             if (!user) {
+            console.log('User not found');
             throw new AuthenticationError('Incorrect credentials');
             }
 
             const correctPw = await user.isCorrectPassword(password);
 
             if (!correctPw) {
+            console.log('Incorrect password');
             throw new AuthenticationError('Incorrect credentials');
             }
 
             const token = signToken(user);
+            console.log('Login successful. Token:', token);
             return { token, user };
         },
         saveBook: async (parent, { bookData }, context) => {
