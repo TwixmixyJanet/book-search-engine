@@ -12,7 +12,6 @@ const PORT = process.env.PORT || 3001;
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: authMiddleware,
 });
 
 app.use(express.urlencoded({ extended: true }));
@@ -29,7 +28,9 @@ if (process.env.NODE_ENV === 'production') {
 const startApolloServer = async (typeDefs, resolvers) => {
   await server.start();
 
-  app.use('/graphql', expressMiddleware(server));
+  app.use('/graphql', expressMiddleware(server, {
+    context: authMiddleware,
+  }));
 
   db.once('open', () => {
     app.listen(PORT, () => {
