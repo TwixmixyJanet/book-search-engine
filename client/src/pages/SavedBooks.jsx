@@ -24,17 +24,33 @@ const SavedBooks = () => {
 
   const handleDeleteBook = async (bookId) => {
     const taken = Auth.loggedIn() ? Auth.getToken() : null;
-
+    console.log(taken);
     if (!taken) {
       return false;
     }
 
     try {
-      const { data } = await removeBook({
+      await removeBook({
         variables: { bookId },
       });
-
+      console.log(data);
+      console.log(bookId);
       removeBookId(bookId);
+      const bookElement = document.getElementById(bookId);
+        if (bookElement) {
+          bookElement.remove();
+        } else {
+          console.warn(`Element with id ${bookId} not found.`);
+        }
+      
+      let counter = document.getElementById('counter');
+      let currentCount = parseInt(counter.innerText.split(' ')[1]);
+      if (currentCount === 0) {
+        counter.innerText = `You have ${currentCount - 1} saved books!`;
+      } else {
+        counter.innerText = `Viewing ${currentCount - 1} saved ${currentCount === 1 ? 'book' : 'books'}`;
+      }
+      document.window.location.reload();
     } catch (err) {
         console.error(err);
       }
