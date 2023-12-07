@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 import {
   Container,
   Card,
@@ -36,13 +38,7 @@ const SavedBooks = () => {
       console.log(data);
       console.log(bookId);
       removeBookId(bookId);
-      const bookElement = document.getElementById(bookId);
-        if (bookElement) {
-          bookElement.remove();
-          document.window.location.reload();
-        } else {
-          console.warn(`Element with id ${bookId} not found.`);
-        }
+      window.location.reload();
       
     } catch (err) {
         console.error(err);
