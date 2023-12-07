@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+
 
 import {
   Container,
@@ -17,33 +17,31 @@ import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
   const { loading, data } = useQuery(QUERY_ME);
-  const [removeBook, { error }] = useMutation(REMOVE_BOOK);
+  const [removeBook, { error }] = useMutation(REMOVE_BOOK, {
+    refetchQueries: [{ query: QUERY_ME }],
+  });
+  
 
   const userData = data?.me || {};
 
-  // use this to determine if `useEffect()` hook needs to run again
-  // const userDataLength = Object.keys(userData).length;
-
   const handleDeleteBook = async (bookId) => {
-    const taken = Auth.loggedIn() ? Auth.getToken() : null;
-    console.log(taken);
-    if (!taken) {
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+  
+    if (!token) {
       return false;
     }
-
+  
     try {
       await removeBook({
         variables: { bookId },
       });
-      console.log(data);
-      console.log(bookId);
+  
       removeBookId(bookId);
-      window.location.reload();
-      
     } catch (err) {
-        console.error(err);
-      }
-    };
+      console.error(err);
+    }
+  };
+  
 
 
   // if data isn't here yet, say so
