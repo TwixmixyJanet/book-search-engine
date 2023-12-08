@@ -80,28 +80,30 @@ THEN I am logged out of the site and presented with a menu with the options Sear
 ### Lessons Learned 
 
 #### 1. resolvers.js
-
+This file is a crucual part of a GraphQL server, providing the implementation for fetching data specified in GraphQL queries and mutations. It helps bridge the gap between the GraphQL schema and the actual data sources or busiiness logic.
 <br />
 ![lesson 1](public/img/lesson1.png)
+![lesson 1](public/img/lesson1b.png)
 
 #### 2. typeDefs.js
-
+This file is where we define the structure of the GraphQL schema using the GraphQL SDL(Schema Definition Language). It serves as a contract between the client and the server, specifying the types of data that can be requested and the operations that can be performed.
 <br />
 ![lesson 2](public/img/lesson2.png)
+![lesson 2](public/img/lesson2b.png)
 
 #### 3. Query
-
+This file is a text file containing GraphQL queries that clients use to request specific data from a GraphQL API. These queries are flexible, allowing clients to request only the information they need and making GraphQL a powerful tool for efficient data retrieval in web development.
 <br />
 ![lesson 3](public/img/lesson3.png)
+![lesson 3](public/img/lesson3b.png)
 
 #### 4. Mutation
-
+This file is a text file containing GraphQL mutation operations that clients use to modify data on a GraphQL server. Mutations allow clients to perform create, update, and delete operations in a flexible and controlled manner, making GraphQL a powerful tool for managing data changes in web development.
 <br />
 ![lesson 4](public/img/lesson4.png)
-![lesson 4](public/img/lesson4b.png)
 
 #### Synopsis
-
+I wanted to cover these files because they are essential in building out the GraphQL server setup. Functionally the typeDefs.js defines the structure, resolver.js implements the behavior, and the Query/Mutation files enable the clients to interact with the GraphQL API based on the specified schema. Together, these files facilitate a clear separation of concerns and provide a structured approach to building and consuming GraphQL APIs in these types of projects.
 
 ## Installation
 
