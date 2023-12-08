@@ -8,23 +8,23 @@ import Auth from "../utils/auth";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 
 const SearchBooks = () => {
-  // create state for holding returned google api data
+  // State to hold returned Google API data
   const [searchedBooks, setSearchedBooks] = useState([]);
-  // create state for holding our search field data
+  // State to hold search field data
   const [searchInput, setSearchInput] = useState("");
 
-  // create state to hold saved bookId values
+  // State to hold saved bookId values
   const [savedBookIds, setSavedBookIds] = useState(getSavedBookIds());
 
+  // Mutation hook for saving a book
   const [saveBook, { error }] = useMutation(SAVE_BOOK);
 
-  // set up useEffect hook to save `savedBookIds` list to localStorage on component unmount
-  // learn more here: https://reactjs.org/docs/hooks-effect.html#effects-with-cleanup
+  // useEffect hook to save 'savedBookIds' list to localStorage on component unmount
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
   });
 
-  // create method to search for books and set state on form submit
+  // Method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
@@ -33,6 +33,7 @@ const SearchBooks = () => {
     }
 
     try {
+      // Fetch data from Google Books API based on search input
       const response = await fetch(
         `https://www.googleapis.com/books/v1/volumes?q=${searchInput}`
       );
@@ -41,6 +42,7 @@ const SearchBooks = () => {
         throw new Error("something went wrong!");
       }
 
+      // Extract relevant data from the API response
       const { items } = await response.json();
 
       const bookData = items.map((book) => ({
@@ -51,6 +53,7 @@ const SearchBooks = () => {
         image: book.volumeInfo.imageLinks?.thumbnail || "",
       }));
 
+      // Update state with searched book data
       setSearchedBooks(bookData);
       setSearchInput("");
     } catch (err) {
@@ -58,26 +61,28 @@ const SearchBooks = () => {
     }
   };
 
-  // create function to handle saving a book to our database
+  // Function to handle saving a book to the user's database
   const handleSaveBook = async (bookId) => {
-    // find the book in `searchedBooks` state by the matching id
+    // Find the book in 'searchedBooks' state by matching the ID
     const bookToSave = searchedBooks.find((book) => book.bookId === bookId);
 
-    // get token
+    // Retrieve the user's token from localStorage
     const token = Auth.loggedIn() ? Auth.getToken() : null;
     if (!token) {
       return false;
     }
 
     try {
+      // Save the book using the 'saveBook' mutation
       await saveBook({
         variables: { bookData: { ...bookToSave } },
       });
 
       console.log(savedBookIds);
 
-      // if book successfully saves to user's account, save book id to state
+      // Update state to remove the saved book's ID
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
+      // Save the updated 'savedBookIds' list to localStorage
       saveBookIds(savedBookIds);
     } catch (err) {
       console.error(err);
@@ -113,6 +118,7 @@ const SearchBooks = () => {
 
       <Container>
         <h2 className="pt-5">
+          {/* Display number of search results or a message if none */}
           {searchedBooks.length
             ? `Viewing ${searchedBooks.length} results:`
             : "Search for a book to begin"}
@@ -122,6 +128,7 @@ const SearchBooks = () => {
             return (
               <Col md="4" key={book.bookId}>
                 <Card border="dark">
+                  {/* Display book image, if available */}
                   {book.image ? (
                     <Card.Img
                       src={book.image}
@@ -141,6 +148,7 @@ const SearchBooks = () => {
                         className="btn-block btn-info"
                         onClick={() => handleSaveBook(book.bookId)}
                       >
+                        {/* Display appropriate text based on whether the book is already saved */}
                         {savedBookIds?.some(
                           (savedId) => savedId === book.bookId
                         )
