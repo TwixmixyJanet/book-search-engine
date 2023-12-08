@@ -1,5 +1,7 @@
+// Import gql (the GraphQL template literal tag)
 const {gql} = require('apollo-server-express');
 
+// Define GraphQL type definitions using the gql template literal tag
 const typeDefs = `
     type User {
         _id: ID!
@@ -44,4 +46,5 @@ const typeDefs = `
     }
     `;
 
+    // Export the GraphQL type definitions for use in Apollo Server
 module.exports = typeDefs;
