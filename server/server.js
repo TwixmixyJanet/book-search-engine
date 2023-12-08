@@ -19,25 +19,26 @@ const server = new ApolloServer({
   resolvers,
 });
 
-// Configure Express to use middleware for parsing URL - encoded and JSON data
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
-
-// Serve static assets in production (React build folder)
-if (process.env.NODE_ENV === 'production') {
-  // Serve static files from the 'client/build' directory
-  app.use(express.static(path.join(__dirname, '../client/build')));
-
-  // Route for handling root URL in production and serving the React build
-  app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '../client/build'));
-  });
-}
 
 // Function to start the Apollo Server and handle GraphQL requests
 const startApolloServer = async (typeDefs, resolvers) => {
   // Start the Apollo Server and listen for requests
   await server.start();
+
+  // Configure Express to use middleware for parsing URL - encoded and JSON data
+  app.use(express.urlencoded({ extended: true }));
+  app.use(express.json());
+
+  // Serve static assets in production (React build folder)
+  if (process.env.NODE_ENV === 'production') {
+    // Serve static files from the 'client/build' directory
+    app.use(express.static(path.join(__dirname, '../client/dist')));
+
+    // Route for handling root URL in production and serving the React build
+    app.get('*', (req, res) => {
+      res.sendFile(path.join(__dirname, '../client/dist/index.html'));
+    });
+  }
 
   // Set up middleware for handling GraphQL requests at the '/graphql' endpoint
   app.use('/graphql', expressMiddleware(server, {
